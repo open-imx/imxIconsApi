@@ -3,7 +3,7 @@ import time
 
 from unittest.mock import patch
 
-from imxIconApi.rateLimiter import rate_limit_window, max_requests_per_window
+from imxIconApi.rateLimiter import RATE_LIMIT_WINDOW, MAX_REQUESTS_PER_WINDOW
 
 
 def test_basic_request(fast_api_limiter_client):
@@ -12,16 +12,16 @@ def test_basic_request(fast_api_limiter_client):
     assert response.json() == {"message": "Success"}
 
 def test_rate_limit_exceeded(fast_api_limiter_client):
-    with patch('imxIconApi.rateLimiter.last_request_time', time.time() - rate_limit_window - 1):
-        with patch('imxIconApi.rateLimiter.request_counter', max_requests_per_window):
-            for _ in range(max_requests_per_window):
+    with patch('imxIconApi.rateLimiter.last_request_time', time.time() - RATE_LIMIT_WINDOW - 1):
+        with patch('imxIconApi.rateLimiter.request_counter', MAX_REQUESTS_PER_WINDOW):
+            for _ in range(MAX_REQUESTS_PER_WINDOW):
                 response = fast_api_limiter_client.get("/test")
                 assert response.status_code == 200
 
             response = fast_api_limiter_client.get("/test")
             assert response.status_code == 429
             assert response.json() == {
-                "error": f"Global app rate limit exceeded: {max_requests_per_window}/{rate_limit_window} sec",
+                "error": f"Global app rate limit exceeded: {MAX_REQUESTS_PER_WINDOW}/{RATE_LIMIT_WINDOW} sec",
                 "msg": "get sponsor key",
             }
 
