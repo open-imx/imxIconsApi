@@ -1,4 +1,4 @@
-import tomllib
+import tomllib  # note that this is a 3.11 function and will fail on py 3.10 and below!
 
 
 def extract_project_dependencies(pyproject_path):
