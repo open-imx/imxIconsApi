@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenImx.Icons.{{ imx_version.name }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.23/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.9/dist/htmx.min.js"></script>
+    <style>
+        /* Existing styles */
+        .svg-wrapper {
+            position: relative;
+            width: 100%;
+            height: 9rem;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .svg-wrapper img {
+            transform: scale(1.25);
+            transform: translate(-12.5%, 0);
+            transform-origin: center;
+            max-width: none;
+            max-height: none;
+        }
+        .download-icon {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+            color: #4A5568; /* Tailwind's gray-600 */
+        }
+        .properties-list {
+            max-height: 100px; /* Set maximum height to 100px */
+            min-height: 100px; /* Set minimum height to 100px */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+        }
+        .sticky-header {
+            position: -webkit-sticky; /* For Safari */
+            position: sticky;
+            top: 0;
+            z-index: 10; /* Ensure it appears above other content */
+            padding: 1rem; /* Adjust padding as needed */
+        }
+        .filter-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            background-color: #e5e7eb; /* Tailwind's gray-200 */
+            color: #4a5568; /* Tailwind's gray-600 */
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .filter-badge.active {
+            background-color: #22c55e;
+            color: black;
+            font-weight: 500;
+        }
+        .filter-badge.exclude.active {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .filter-badge .remove-icon {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: red;
+        }
+        .filter-badge.exclude .remove-icon {
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+        }
+        .toggle-icon {
+            margin-left:8px;
+            margin-right:4px;
+        }
+
+        .filter-badge.exclude .toggle-icon {
+            color: #dbeafe;
+            transform: rotate(180deg); /* Rotate to indicate exclusion */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+    <div class="container mx-auto p-4 bg-white dark:bg-gray-900 shadow-md rounded-lg">
+
+        <div class="sticky-header bg-white dark:bg-gray-900 shadow-md rounded-lg z-10">
+            <header class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">OpenImx.Icons</h1>
+                <h6 class="font-bold">{{ imx_version.value }}</h6>
+            </header>
+            <div class="tabs flex border-b border-gray-300 mb-4">
+                {% for imx_path in data.keys() %}
+                <button class="py-2 px-4 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border-none cursor-pointer transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 {% if loop.first %}border-b-2 border-blue-500{% endif %}" onclick="openTab(event, '{{ imx_path }}')">{{ imx_path }}</button>
+                {% endfor %}
+            </div>
+            <div class="flex items-center mb-4">
+                <input type="text" id="global-filter" class="filter-input p-2 w-full border border-gray-300 rounded-lg text-blue-500 dark:text-blue-300" onkeyup="filterCards()" placeholder="Filter all subtypes...">
+            </div>
+
+
+            <div class="collapse bg-base-200">
+                <input type="checkbox" />
+                <div class="collapse-title font-small">Filter by badges</div>
+                <div class="collapse-content">
+                    <div class="flex flex-wrap gap-2" id="property-filters">
+                        <!-- Filter badges will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div id="main-content">
+            {% for imx_path, subtypes in data.items() %}
+            <div id="{{ imx_path }}" class="tab-content {% if loop.first %}block{% else %}hidden{% endif %}">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for subtype_name, subtype_data in subtypes.items() %}
+                    <div class="card border border-gray-300 p-4 rounded-lg bg-white dark:bg-gray-700 shadow-sm flex flex-col justify-between h-80" data-outofservice="{{ subtype_data['properties']['isOutOfService'] | default(False) }}">
+                        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2 truncate">{{ subtype_name }}</h3>
+                        {% if subtype_data['svg'] %}
+                        <div class="svg-wrapper relative mb-4">
+                            <img src="data:image/svg+xml;base64,{{ subtype_data['svg'] }}" alt="{{ subtype_name }} SVG">
+                            <div class="download-icon cursor-pointer text-gray-600 dark:text-gray-300 hover:text-blue-500" onclick="downloadSVG('{{ subtype_name }}', '{{ subtype_data['svg'] }}')">
+                                <i class="fas fa-download"></i>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-500 dark:text-gray-400">No SVG available.</p>
+                        {% endif %}
+                        <ul class="properties-list bg-gray-100 dark:bg-gray-800 p-2 rounded-lg overflow-y-auto text-sm text-gray-600 dark:text-gray-300">
+                            {% for key, value in subtype_data['properties'].items() %}
+                            <li class="mb-1"><strong>{{ key }}:</strong> {{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+<script>
+    const propertyValues = {};
+    const activeFilters = { include: [], exclude: [] };
+
+    // Populate propertyValues from template data
+    {% for imx_path, subtypes in data.items() %}
+        {% for subtype_name, subtype_data in subtypes.items() %}
+            {% for key, value in subtype_data['properties'].items() %}
+                if (!propertyValues['{{ imx_path }}']) {
+                    propertyValues['{{ imx_path }}'] = {};
+                }
+                if (!propertyValues['{{ imx_path }}']['{{ key }}']) {
+                    propertyValues['{{ imx_path }}']['{{ key }}'] = new Set();
+                }
+                propertyValues['{{ imx_path }}']['{{ key }}'].add('{{ value }}');
+            {% endfor %}
+        {% endfor %}
+    {% endfor %}
+
+    function updateBadges(tabId) {
+        const filterContainer = document.getElementById('property-filters');
+        filterContainer.innerHTML = ''; // Clear existing badges
+        const currentTabValues = propertyValues[tabId] || {};
+
+        for (const [key, values] of Object.entries(currentTabValues)) {
+            values.forEach(value => {
+                // Create badge container
+                const badgeContainer = document.createElement('div');
+                badgeContainer.className = 'filter-badge';
+                badgeContainer.setAttribute('data-filter-key', key);
+                badgeContainer.setAttribute('data-filter-value', value);
+
+                // Create badge text
+                const badgeText = document.createElement('span');
+                badgeText.textContent = `${key}: ${value}`;
+                badgeContainer.appendChild(badgeText);
+
+                // Create toggle icon
+                const toggleIcon = document.createElement('i');
+                toggleIcon.className = 'fas fa-filter toggle-icon';
+                badgeContainer.appendChild(toggleIcon);
+
+                // Create remove icon
+                const removeIcon = document.createElement('i');
+                removeIcon.className = 'fas fa-times remove-icon';
+                removeIcon.style.display = 'none'; // Initially hide the delete icon
+                removeIcon.onclick = (e) => {
+                    e.stopPropagation();
+                    badgeContainer.classList.remove('active', 'exclude');
+                    removeIcon.style.display = 'none'; // Hide the delete icon when deactivated
+                    updateFilterState(key, value, false, false);
+                };
+                badgeContainer.appendChild(removeIcon);
+
+                // Handle badge click for toggling filter type
+                badgeContainer.onclick = () => {
+                    const isActive = badgeContainer.classList.contains('active');
+                    const isExclude = badgeContainer.classList.contains('exclude');
+
+                    if (isActive) {
+                        badgeContainer.classList.toggle('exclude');
+                        updateFilterState(key, value, !isExclude, true);
+                    } else {
+                        badgeContainer.classList.add('active');
+                        removeIcon.style.display = 'inline'; // Show the delete icon when activated
+                        updateFilterState(key, value, true, false);
+                    }
+                };
+
+                filterContainer.appendChild(badgeContainer);
+            });
+        }
+    }
+
+    function updateFilterState(key, value, active, exclude) {
+        if (active) {
+            if (exclude) {
+                // Remove from include if present
+                activeFilters.include = activeFilters.include.filter(filter => filter.key !== key || filter.value !== value);
+                // Add to exclude
+                if (!activeFilters.exclude.some(filter => filter.key === key && filter.value === value)) {
+                    activeFilters.exclude.push({ key, value });
+                }
+            } else {
+                // Remove from exclude if present
+                activeFilters.exclude = activeFilters.exclude.filter(filter => filter.key !== key || filter.value !== value);
+                // Add to include
+                if (!activeFilters.include.some(filter => filter.key === key && filter.value === value)) {
+                    activeFilters.include.push({ key, value });
+                }
+            }
+        } else {
+            // Remove from both include and exclude
+            activeFilters.include = activeFilters.include.filter(filter => filter.key !== key || filter.value !== value);
+            activeFilters.exclude = activeFilters.exclude.filter(filter => filter.key !== key || filter.value !== value);
+        }
+
+        filterCards();
+    }
+
+    function filterCards() {
+        const searchInput = document.getElementById('global-filter').value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+
+        // Group include filters by key
+        const includeGroups = activeFilters.include.reduce((acc, filter) => {
+            if (!acc[filter.key]) {
+                acc[filter.key] = [];
+            }
+            acc[filter.key].push(filter.value.toLowerCase());
+            return acc;
+        }, {});
+
+        cards.forEach(card => {
+            const cardText = card.innerText.toLowerCase();
+            let match = cardText.includes(searchInput);
+
+            // Include filters: card must match any value for each key
+            if (Object.keys(includeGroups).length > 0) {
+                match = match && Object.entries(includeGroups).every(([key, values]) => {
+                    return values.some(value => cardText.includes(`${key.toLowerCase()}: ${value}`));
+                });
+            }
+
+            // Exclude filters: none must match
+            if (activeFilters.exclude.length > 0) {
+                match = match && !activeFilters.exclude.some(filter => {
+                    return cardText.includes(`${filter.key.toLowerCase()}: ${filter.value.toLowerCase()}`);
+                });
+            }
+
+            card.style.display = match ? 'block' : 'none';
+        });
+    }
+
+
+    function openTab(evt, tabId) {
+        var i, tabcontent, tablinks;
+
+        // Hide all tab content
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Remove active class from all tab links
+        tablinks = document.getElementsByTagName("button");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" border-b-2 border-blue-500", "");
+        }
+
+        // Show the current tab
+        document.getElementById(tabId).style.display = "block";
+        evt.currentTarget.className += " border-b-2 border-blue-500";
+
+        // Update badges and clear filters
+        updateBadges(tabId);
+
+        // Clear filters for the new tab
+        activeFilters.include = [];
+        activeFilters.exclude = [];
+
+        // Apply the new filters
+        filterCards(); // Filter cards after switching tabs
+    }
+
+    function downloadSVG(name, svgData) {
+        const link = document.createElement('a');
+        link.href = `data:image/svg+xml;base64,${svgData}`;
+        link.download = `${name}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Initialize badges for the first tab
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstTab = document.querySelector('.tabs button');
+        if (firstTab) {
+            openTab({ currentTarget: firstTab }, firstTab.textContent);
+        }
+    });
+</script>
+
+</body>
+</html>
