@@ -1,0 +1,10 @@
+name: 'Build, test and lint'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Run tests using Hatch environment
+      shell: bash
+      run: |
+        hatch run pytest
