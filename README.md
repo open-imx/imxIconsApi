@@ -8,7 +8,6 @@ For more information about the icons generation, refer to the library documentat
 
 This is a personal project and therefore no responsibility for the functionality, accuracy, or usage.
 
-
 ## Quick Start
 go to: <a href="https://imx-icons-api.azurewebsites.net/" target="_blank">https://imx-icons-api.azurewebsites.net/</a>
 
@@ -27,6 +26,9 @@ The service is currently running on a free app plan, which means requests are gl
 If the service gains sufficient usage, there is potential for an upgrade to a SaaS app.
 
 Additionally, it is fully open-source, allowing you to self-host and use it at no cost. Currently, this is the first version and is intended as a demo.
+
+### Backlog and Roadmap
+<a href="https://github.com/orgs/open-imx/projects/4/" target="_blank">https://github.com/orgs/open-imx/projects/4/</a>
 
 ## Versioning
 We use bumpversion for managing versions, following the semantic versioning strategy. 
