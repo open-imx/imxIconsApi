@@ -1,5 +1,8 @@
 # Open-Imx:Icons.API
 
+![imxInsights logo](https://raw.githubusercontent.com/open-imx/imxIcons/main/docs/assets/logo.svg#only-dark#gh-dark-mode-only)
+![imxInsights logo](https://raw.githubusercontent.com/open-imx/imxIcons/main/docs/assets/logo-light.svg#only-light#gh-light-mode-only)
+
 This FastAPI app enables the retrieval of icons based on a specified IMX path and a set of associated properties. 
 It is utilizing the <a href="https://github.com/open-imx/ImxIcons" target="_blank">Open-Imx:Icons</a> python library that provide a efficient solution for icon lookup.
 For more information about the icons generation, refer to the library documentation.
