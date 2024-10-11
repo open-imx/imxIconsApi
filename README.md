@@ -1,49 +1,44 @@
 # Open-Imx:Icons.API
 
-This FastAPI app allows for the retrieval of icons based on a specified IMX path and associated properties. It utilizes the [Open-Imx:Icons](https://github.com/open-imx/ImxIcons) Python library, which offers an efficient solution for icon lookup. For detailed information on icon generation, please refer to the library documentation.
+![imxInsights logo](https://raw.githubusercontent.com/open-imx/imxIcons/main/docs/assets/logo.svg#only-dark#gh-dark-mode-only)
+![imxInsights logo](https://raw.githubusercontent.com/open-imx/imxIcons/main/docs/assets/logo-light.svg#only-light#gh-light-mode-only)
 
-**Source Code**: [https://github.com/open-imx/ImxIconsApi](https://github.com/open-imx/ImxIconsApi)
+This FastAPI app enables the retrieval of icons based on a specified IMX path and a set of associated properties. 
+It is utilizing the <a href="https://github.com/open-imx/ImxIcons" target="_blank">Open-Imx:Icons</a> python library that provide a efficient solution for icon lookup.
+For more information about the icons generation, refer to the library documentation.
 
-This is a personal project and is provided as-is, without any guarantees regarding functionality, accuracy, or usage.
+**Source Code**: <a href="https://github.com/open-imx/ImxIconsApi" target="_blank">https://github.com/open-imx/imxIconsApi</a>
+
+This is a personal project and therefore no responsibility for the functionality, accuracy, or usage.
 
 ## Quick Start
+go to: <a href="https://imx-icons-api.azurewebsites.net/" target="_blank">https://imx-icons-api.azurewebsites.net/</a>
 
-This is the initial version and serves as a demo.  
-You can explore and use it by visiting: [imx-icons-api.azurewebsites.net](https://imx-icons-api.azurewebsites.net/).
+### Get imx paths
+We provide an endpoint to view the available paths. Each IMX object has a path, for standard objects the path corresponds to the IMX object's name. For objects with children the path is constructed as `parent.object`, ensuring uniqueness.
 
-### Get IMX Paths
+### Get icon mapping
+Not all objects or property combinations will generate an icon, as the icon path properties and their combinations can vary between IMX versions. To see the specific combinations available, use the mapping endpoint.
 
-The API provides an endpoint to view available paths. Each IMX object has a unique path. For standard objects, the path corresponds to the object’s name, while for objects with children, the path is structured as `parent.object`, ensuring uniqueness.
+### Get icon
+There are two endpoints available: one for retrieving the SVG file and another for obtaining the SVG as text. 
+- When `qgis` is set to `true`, the `qgis` parameter will be included in the svg file.
 
-### Get Icon Mapping
+## Service vs self hosting
+The service is currently running on a free app plan, which means requests are globally rate-limited. 
+If the service gains sufficient usage, there is potential for an upgrade to a SaaS app.
 
-Not all objects or property combinations generate an icon, as icon path properties and combinations may vary between IMX versions. Use the mapping endpoint to view available combinations.
+Additionally, it is fully open-source, allowing you to self-host and use it at no cost. Currently, this is the first version and is intended as a demo.
 
-### Get Icon
-
-Two endpoints are available: one to retrieve the SVG file and another to obtain the SVG as text.
-- If the `qgis` parameter is set to `true`, the SVG file will include the `qgis` attribute.
-
-### Reporting Issues
-
-If you encounter any issues specifically related to the API, such as endpoint functionality, request handling, or performance, please report them in the [ImxIconsApi repository](https://github.com/open-imx/ImxIconsApi/issues).
-
-For issues related to icon generation, such as missing icons, incorrect mappings, or discrepancies in IMX path handling, please report them directly to the [Open-Imx:Icons library](https://github.com/open-imx/ImxIcons/issues) repository.
-
-## Service vs Self-Hosting
-
-The service currently runs on a free plan, meaning requests are rate-limited globally. If demand increases, upgrading to a SaaS model could be considered.
-
-Since the project is open-source, you can also self-host the service at no cost.
+### Backlog and Roadmap
+<a href="https://github.com/orgs/open-imx/projects/4/" target="_blank">https://github.com/orgs/open-imx/projects/4/</a>
 
 ## Versioning
+We use bumpversion for managing versions, following the semantic versioning strategy. 
 
-We use `bumpversion` to manage versioning, following the semantic versioning strategy.
-
-### New Library Releases
-
-When a new version of the Open-Imx:Icons library is released, it triggers a dispatch event. This event starts the pipeline to build and deploy a new API release, updating only the build number without changing the version. This process ensures that the API stays updated with changes to the library without significant overhead.
+### New library releases
+When the Open-Imx:Icons library releases a new version, it triggers a dispatch event. This event initiates the pipeline to build and deploy a new release of the API, updating only the build number without changing the version.
+This approach allows us to stay updated with changes in the library without adding significant overhead.
 
 ## Contributing
-
-Contributions are welcome! For more details on contributing, refer to the [contribution guidelines](CONTRIBUTING.md) for this project.
+Contributions welcome! For more information on the design of the library, see [contribution guidelines for this project](CONTRIBUTING.md).
