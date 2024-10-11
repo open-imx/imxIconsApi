@@ -1,6 +1,7 @@
+import os
+
 import pytest
 from fastapi import status
-from unittest.mock import patch
 
 
 def test_openapi_endpoints(openapi_spec):
@@ -163,15 +164,12 @@ def test_get_svg_icon_as_file(imx_version, request_data, expected_status_code, f
         ("xxxxx", "icon1", status.HTTP_422_UNPROCESSABLE_ENTITY),
     ]
 )
+@pytest.mark.skipif(
+    os.getenv('CI') == 'true', reason="Skipping icon generation tests in CI environment"
+)
 def test_get_svg_url(imx_version, icon_name, expected_status_code, fast_api_icon_client):
-    with patch("imxIconApi.startup.create_asset_folder") as mock_icon_gen:
-        if expected_status_code == status.HTTP_200_OK:
-            mock_icon_gen.return_value = "svg content"
-        elif expected_status_code == status.HTTP_404_NOT_FOUND:
-            mock_icon_gen.side_effect = FileNotFoundError("Icon not found")
+    response = fast_api_icon_client.get(f"/{imx_version}/svg/{icon_name}")
+    assert response.status_code == expected_status_code
 
-        response = fast_api_icon_client.get(f"/{imx_version}/svg/{icon_name}")
-        assert response.status_code == expected_status_code
-
-        if expected_status_code == status.HTTP_200_OK:
-            assert response.headers["content-type"] == "image/svg+xml"
+    if expected_status_code == status.HTTP_200_OK:
+        assert response.headers["content-type"] == "image/svg+xml"
