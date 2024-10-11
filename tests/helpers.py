@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pathlib import Path
 from pkgutil import ModuleInfo, walk_packages
 from types import ModuleType

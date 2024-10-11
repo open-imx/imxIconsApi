@@ -1,8 +1,10 @@
+import os
+
 import pytest
+from fastapi import status
 
 
 def test_openapi_endpoints(openapi_spec):
-    # Check if specific endpoints exist in the OpenAPI spec
     assert any(path == "/{imx_version}/paths" for path in openapi_spec["paths"].keys())
     assert any(path == "/{imx_version}/mapping" for path in openapi_spec["paths"].keys())
     assert any(path == "/{imx_version}/svg/str" for path in openapi_spec["paths"].keys())
@@ -81,9 +83,9 @@ def test_endpoint_details(openapi_spec):
 
 
 @pytest.mark.parametrize("imx_version, expected_status_code", [
-    ("IMX-v1.2.4", 200),  # Replace with actual valid version and status code
-    ("IMX-v5.0.0", 200),  # Replace with actual valid version and status code
-    ("IMX-v1.2.5", 422),  # Replace with an invalid version and expected error code
+    ("IMX-v1.2.4", 200),
+    ("IMX-v5.0.0", 200),
+    ("IMX-v1.2.5", 422),
 ])
 def test_get_all_supported_imx_paths(imx_version: str, expected_status_code: int, fast_api_icon_client):
     response = fast_api_icon_client.get(f"/{imx_version}/paths")
@@ -114,9 +116,6 @@ def test_get_icon_mapping(imx_version: str, imx_path: str, expected_status_code:
         assert isinstance(response_data, list)
     elif expected_status_code == 400:
         assert "detail" in response.json()
-
-
-
 
 
 @pytest.mark.parametrize(
@@ -154,3 +153,23 @@ def test_get_svg_icon_as_file(imx_version, request_data, expected_status_code, f
             if b'attachment; filename=' in header_value
         ]
         assert len(matching_headers) == 1
+
+
+
+@pytest.mark.parametrize(
+    "imx_version, icon_name, expected_status_code",
+    [
+        ("IMX-v1.2.4", "AutomaticPermissiveGantryArrow", status.HTTP_200_OK),
+        ("IMX-v1.2.4", "non_existing_icon", status.HTTP_404_NOT_FOUND),
+        ("xxxxx", "icon1", status.HTTP_422_UNPROCESSABLE_ENTITY),
+    ]
+)
+@pytest.mark.skipif(
+    os.getenv('CI') == 'true', reason="Skipping icon generation tests in CI environment"
+)
+def test_get_svg_url(imx_version, icon_name, expected_status_code, fast_api_icon_client):
+    response = fast_api_icon_client.get(f"/{imx_version}/svg/{icon_name}")
+    assert response.status_code == expected_status_code
+
+    if expected_status_code == status.HTTP_200_OK:
+        assert response.headers["content-type"] == "image/svg+xml"
