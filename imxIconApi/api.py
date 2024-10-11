@@ -1,3 +1,6 @@
+import os
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -7,14 +10,25 @@ from imxIconApi import __version__
 from imxIconApi.rateLimiter import RateLimiterMiddleware
 from imxIconApi.routers import icon_lib_page
 from imxIconApi.routers.v1 import get_icons
+from imxIconApi.startup import create_asset_folder
 
 # https://github.com/Intility/fastapi-azure-auth
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await create_asset_folder()
+    yield
+
 
 app = FastAPI(
     title="OpenImx.Icons",
     version=f"{__version__}",
     description='info: <a href="https://github.com/open-imx/ImxIconsApi" target="_blank">https://github.com/open-imx/imxIconsApi</a>',
+    lifespan=lifespan,
 )
+
+
 app.add_middleware(RateLimiterMiddleware)
 
 app.include_router(icon_lib_page.router)

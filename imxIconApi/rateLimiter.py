@@ -4,7 +4,6 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-
 REQUEST_COUNTER: int = 0
 LAST_REQUEST_TIME: float = time.time()
 RATE_LIMIT_WINDOW: int = 60
@@ -12,7 +11,6 @@ MAX_REQUESTS_PER_WINDOW: int = 10
 
 
 class RateLimiterMiddleware(BaseHTTPMiddleware):
-
     @staticmethod
     def _has_api_key(request: Request) -> bool:
         api_key = [
@@ -28,11 +26,10 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
     def _is_limited_page(request: Request) -> bool:
         url_to_check = f"{request.url}".replace(f"{request.base_url}", "")
         if url_to_check == "":
-            return  True
+            return True
         elif "doc" in url_to_check or "docs" in url_to_check:
             return True
         return False
-
 
     async def dispatch(self, request: Request, call_next):
         global LAST_REQUEST_TIME, REQUEST_COUNTER

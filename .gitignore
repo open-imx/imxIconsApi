@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 /klad/
 /requirements.txt
+/imxIconApi/static/v124/
+/imxIconApi/static/v500/
