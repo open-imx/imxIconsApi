@@ -1,0 +1,11 @@
+name: 'Build, test and lint'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: Run linter using Hatch environment
+      shell: bash
+      run: |
+        hatch run lint-check
+      continue-on-error: true

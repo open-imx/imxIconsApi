@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: hatch-lint-test
+        name: Hatch Test
+        entry: hatch
+        args: ["run", "test"]
+        language: system
+        types: [python]
