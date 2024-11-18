@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
@@ -25,6 +26,14 @@ app = FastAPI(
     version=f"{__version__}",
     description='info: <a href="https://github.com/open-imx/ImxIconsApi" target="_blank">https://github.com/open-imx/imxIconsApi</a>',
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
