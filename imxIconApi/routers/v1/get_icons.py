@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Query, Response, status
+from fastapi import APIRouter, HTTPException, Query, Request, Response, status
 from fastapi.responses import FileResponse
 from imxIcons.domain import ICON_DICT
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
@@ -139,9 +139,49 @@ async def get_svg_icon_as_file(
 
     return Response(content=svg_content, media_type="image/svg+xml", headers=headers)
 
+@router.post(
+    path="/{imx_version}/svg/url",
+    response_class=Response,
+    response_description="SVG file",
+    responses={
+        status.HTTP_400_BAD_REQUEST: {
+            "model": ErrorModel,
+            "content": {
+                "application/json": {
+                    "examples": {
+                        ErrorCode.IMX_PATH_NOT_FOUND: {
+                            "summary": "IMX path is not found / not supported by the icon service.",
+                            "value": {"detail": ErrorCode.IMX_PATH_NOT_FOUND},
+                        },
+                        "SVG_NAME_NOT_FOUND": {
+                            "summary": "SVG name attribute not found.",
+                            "value": {"detail": "SVG name attribute not found"},
+                        },
+                    }
+                }
+            },
+        },
+    },
+)
+async def get_svg_icon_as_url(
+    item: IconRequestModel, imx_version: ImxVersionEnum, request: Request, qgis_supported: bool = False
+):
+    svg_content = IconService.get_svg(item, imx_version)
+    match = re.search(r'<svg[^>]*\bname="([^"]*)"', svg_content)
+
+    if match:
+        svg_name = match.group(1)
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="SVG name attribute not found",
+        )
+
+    return f"{request.base_url}{imx_version}/svg/{svg_name}.svg"
+
 
 @router.get(
-    "/{imx_version}/svg/{icon_name}",
+    "/{imx_version}/svg/{icon_name}.svg",
     response_description="SVG file",
     responses={
         status.HTTP_400_BAD_REQUEST: {
@@ -189,4 +229,4 @@ async def get_svg_url(
             status_code=status.HTTP_404_NOT_FOUND, detail="File not found"
         )
 
-    return FileResponse(svg_file_path)
+    return FileResponse(svg_file_path, media_type="image/svg+xml;charset=utf-8")
