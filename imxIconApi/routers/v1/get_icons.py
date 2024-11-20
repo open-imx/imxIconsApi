@@ -177,7 +177,7 @@ async def get_svg_icon_as_url(
             detail="SVG name attribute not found",
         )
 
-    return f"{request.base_url}{imx_version}/svg/{svg_name}.svg"
+    return f"{request.base_url}{imx_version.value}/svg/{svg_name}.svg"
 
 
 @router.get(
