@@ -164,3 +164,6 @@ cython_debug/
 /requirements.txt
 /imxIconApi/static/v124/
 /imxIconApi/static/v500/
+
+# VSCode
+/.vscode
