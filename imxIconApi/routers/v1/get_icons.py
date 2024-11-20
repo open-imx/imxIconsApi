@@ -139,6 +139,7 @@ async def get_svg_icon_as_file(
 
     return Response(content=svg_content, media_type="image/svg+xml", headers=headers)
 
+
 @router.post(
     path="/{imx_version}/svg/url",
     response_class=Response,
@@ -164,7 +165,10 @@ async def get_svg_icon_as_file(
     },
 )
 async def get_svg_icon_as_url(
-    item: IconRequestModel, imx_version: ImxVersionEnum, request: Request, qgis_supported: bool = False
+    item: IconRequestModel,
+    imx_version: ImxVersionEnum,
+    request: Request,
+    qgis_supported: bool = False,
 ):
     svg_content = IconService.get_svg(item, imx_version)
     match = re.search(r'<svg[^>]*\bname="([^"]*)"', svg_content)
