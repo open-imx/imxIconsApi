@@ -37,7 +37,7 @@ app.add_middleware(
 )
 
 
-app.add_middleware(RateLimiterMiddleware)
+# app.add_middleware(RateLimiterMiddleware)
 
 app.include_router(icon_lib_page.router)
 app.include_router(get_icons.router)

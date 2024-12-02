@@ -65,11 +65,6 @@ lint-check = [
 docs-serve = "mkdocs serve"
 docs-build = "mkdocs build"
 
-bump-major = "bumpversion major"
-bump-minor = "bumpversion minor"
-bump-patch = "bumpversion patch"
-bump-build = "bumpversion build"
-
 [build-system]
 requires = ["hatchling", "hatch-regex-commit", "isort"]
 build-backend = "hatchling.build"
