@@ -108,7 +108,7 @@ jobs:
     - name: Get version
       id: get_version
       run: |
-        version=$(python -c 'import configparser; config = configparser.ConfigParser(); config.read("setup.cfg"); print(config["bumpversion"]["current_version"])')
+        version=$(python -c 'import re; exec(open("imxIconApi/__init__.py").read()); print(__version__)')
         echo "VERSION=$version" >> $GITHUB_ENV
 
     - name: Get original PR details
