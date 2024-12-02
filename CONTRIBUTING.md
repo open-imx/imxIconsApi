@@ -54,15 +54,15 @@ hatch run lint
 You can bump the version, create a commit and associated tag with one command:
 
 ```bash
-hatch version patch
+hatch run bump-patch
 ```
 
 ```bash
-hatch version minor
+hatch run bump-minor
 ```
 
 ```bash
-hatch version major
+hatch run bump-major
 ```
 
 
