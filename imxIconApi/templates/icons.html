@@ -95,19 +95,23 @@
     <div class="container mx-auto p-4 bg-white dark:bg-gray-900 shadow-md rounded-lg">
 
         <div class="sticky-header bg-white dark:bg-gray-900 shadow-md rounded-lg z-10">
+
             <header class="flex justify-between items-center mb-4">
                 <h1 class="text-2xl font-bold">OpenImx.Icons</h1>
                 <h6 class="font-bold">{{ imx_version.value }}</h6>
             </header>
-            <div class="tabs flex border-b border-gray-300 mb-4">
+
+            <div class="tabs flex flex-wrap border-b border-gray-300 mb-4">
                 {% for imx_path in data.keys() %}
-                <button class="py-2 px-4 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border-none cursor-pointer transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 {% if loop.first %}border-b-2 border-blue-500{% endif %}" onclick="openTab(event, '{{ imx_path }}')">{{ imx_path }}</button>
+                <button class="py-2 px-4 text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border-none cursor-pointer transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 {% if loop.first %}border-b-2 border-blue-500{% endif %}" onclick="openTab(event, '{{ imx_path }}')">
+                    {{ imx_path }}
+                </button>
                 {% endfor %}
             </div>
+
             <div class="flex items-center mb-4">
                 <input type="text" id="global-filter" class="filter-input p-2 w-full border border-gray-300 rounded-lg text-blue-500 dark:text-blue-300" onkeyup="filterCards()" placeholder="Filter all subtypes...">
             </div>
-
 
             <div class="collapse bg-base-200">
                 <input type="checkbox" />
@@ -118,8 +122,6 @@
                     </div>
                 </div>
             </div>
-
-
 
         </div>
 
