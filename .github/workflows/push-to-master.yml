@@ -1,6 +1,9 @@
 name: Create release on push to master
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types: [closed]
   repository_dispatch:
