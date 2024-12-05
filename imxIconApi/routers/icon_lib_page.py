@@ -3,7 +3,7 @@ import base64
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from imxIcons.domain import ICON_DICT
+from imxIcons.domain.icon_library import ICON_DICT
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
 from imxIcons.iconService import IconService
 from imxIcons.iconServiceModels import IconRequestModel

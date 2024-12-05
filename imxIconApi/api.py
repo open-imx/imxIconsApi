@@ -16,7 +16,7 @@ from imxIconApi.startup import create_asset_folder
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # pragma: no cover
     await create_asset_folder()
     yield
 
