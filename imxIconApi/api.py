@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
 
 from imxIconApi import __version__
-from imxIconApi.rateLimiter import RateLimiterMiddleware
+# from imxIconApi.rateLimiter import RateLimiterMiddleware
 from imxIconApi.routers import icon_lib_page
 from imxIconApi.routers.v1 import get_icons
 from imxIconApi.startup import create_asset_folder

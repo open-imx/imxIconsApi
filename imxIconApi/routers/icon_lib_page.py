@@ -31,10 +31,14 @@ async def render_icons(request: Request, imx_version: ImxVersionEnum):
             data[imx_path] = {}
             for icon_entity in icon_entities[imx_version.name]:
                 svg_content = await get_svg_content(
-                    IconRequestModel(imx_path=imx_path, properties=icon_entity.properties),
+                    IconRequestModel(
+                        imx_path=imx_path, properties=icon_entity.properties
+                    ),
                     imx_version,
                 )
-                encoded_svg = base64.b64encode(svg_content.encode("utf-8")).decode("utf-8")
+                encoded_svg = base64.b64encode(svg_content.encode("utf-8")).decode(
+                    "utf-8"
+                )
                 data[imx_path][icon_entity.icon_name] = {
                     "properties": icon_entity.properties,
                     "svg": encoded_svg,
