@@ -3,7 +3,7 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response, status
 from fastapi.responses import FileResponse
-from imxIcons.domain import ICON_DICT
+from imxIcons.domain.icon_library import ICON_DICT
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
 from imxIcons.iconService import IconService
 from imxIcons.iconServiceModels import IconModel, IconRequestModel
@@ -130,7 +130,7 @@ async def get_svg_icon_as_file(
     if match:
         svg_name = match.group(1)
     else:
-        raise HTTPException(
+        raise HTTPException(  # pragma: no cover
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="SVG name attribute not found",
         )
@@ -142,6 +142,7 @@ async def get_svg_icon_as_file(
 
 @router.post(
     path="/{imx_version}/svg/url",
+    tags=["url"],
     response_class=Response,
     response_description="SVG file",
     responses={
@@ -176,7 +177,7 @@ async def get_svg_icon_as_url(
     if match:
         svg_name = match.group(1)
     else:
-        raise HTTPException(
+        raise HTTPException(  # pragma: no cover
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="SVG name attribute not found",
         )
@@ -185,7 +186,8 @@ async def get_svg_icon_as_url(
 
 
 @router.get(
-    "/{imx_version}/svg/{icon_name}.svg",
+    path="/{imx_version}/svg/{icon_name}.svg",
+    tags=["url"],
     response_description="SVG file",
     responses={
         status.HTTP_400_BAD_REQUEST: {
@@ -221,7 +223,7 @@ async def get_svg_url(
     icon_name: str,
 ):
     if not imx_version:
-        raise HTTPException(
+        raise HTTPException(  # pragma: no cover
             status_code=status.HTTP_400_BAD_REQUEST, detail="IMX path not found"
         )
 
