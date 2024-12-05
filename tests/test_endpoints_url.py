@@ -15,8 +15,8 @@ from fastapi import status
 @pytest.mark.skipif(
     os.getenv('CI') == 'true', reason="Skipping icon generation tests in CI environment"
 )
-def test_get_svg_url(imx_version, icon_name, expected_status_code, fast_api_icon_client):
-    response = fast_api_icon_client.get(f"/{imx_version}/svg/{icon_name}.svg")
+def test_get_svg_url(imx_version, icon_name, expected_status_code, fast_api_icon_url_client):
+    response = fast_api_icon_url_client.get(f"/{imx_version}/svg/{icon_name}.svg")
     assert response.status_code == expected_status_code
 
     if expected_status_code == status.HTTP_200_OK:
@@ -32,8 +32,8 @@ def test_get_svg_url(imx_version, icon_name, expected_status_code, fast_api_icon
 @pytest.mark.skipif(
     os.getenv('CI') == 'true', reason="Skipping icon generation tests in CI environment"
 )
-def test_post_svg_url(imx_version, request_data, expected_status_code, icon_url, fast_api_icon_client):
-    response = fast_api_icon_client.post(f"/{imx_version}/svg/url/", json=request_data)
+def test_post_svg_url(imx_version, request_data, expected_status_code, icon_url, fast_api_icon_url_client):
+    response = fast_api_icon_url_client.post(f"/{imx_version}/svg/url/", json=request_data)
     assert response.status_code == expected_status_code
     if expected_status_code == 200:
         assert response.text == icon_url

@@ -4,12 +4,15 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from imxIcons import __version__ as imx_icon_version
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
 
-from imxIconApi import __version__
+from imxIconApi import __version__ as api_version
+from imxIconApi.api_description import description
+
 # from imxIconApi.rateLimiter import RateLimiterMiddleware
 from imxIconApi.routers import icon_lib_page
-from imxIconApi.routers.v1 import get_icons
+from imxIconApi.routers.v1 import get_icons, get_url
 from imxIconApi.startup import create_asset_folder
 
 # https://github.com/Intility/fastapi-azure-auth
@@ -23,8 +26,8 @@ async def lifespan(app: FastAPI):  # pragma: no cover
 
 app = FastAPI(
     title="OpenImx.Icons",
-    version=f"{__version__}",
-    description='info: <a href="https://github.com/open-imx/ImxIconsApi" target="_blank">https://github.com/open-imx/imxIconsApi</a>',
+    version=f"📡{api_version} | ⚙️{imx_icon_version}",
+    description=description,
     lifespan=lifespan,
 )
 
@@ -35,12 +38,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
 # app.add_middleware(RateLimiterMiddleware)
 
 app.include_router(icon_lib_page.router)
 app.include_router(get_icons.router)
+app.include_router(get_url.router)
 
 templates = Jinja2Templates(directory="imxIconApi/templates")
 
