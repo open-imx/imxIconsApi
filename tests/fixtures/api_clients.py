@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from fastapi import FastAPI
 
 from imxIconApi.rateLimiter import RateLimiterMiddleware
-from imxIconApi.routers.v1 import get_icons
+from imxIconApi.routers.v1 import get_icons, get_url
 from imxIconApi.api import app
 from imxIconApi.routers import icon_lib_page
 
@@ -41,6 +41,13 @@ def fast_api_library_client():
 def fast_api_icon_client():
     app = FastAPI()
     app.include_router(get_icons.router)
+    client = TestClient(app)
+    return client
+
+@pytest.fixture(scope="module")
+def fast_api_icon_url_client():
+    app = FastAPI()
+    app.include_router(get_url.router)
     client = TestClient(app)
     return client
 
