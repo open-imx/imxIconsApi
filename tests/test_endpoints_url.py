@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlencode
 
 import pytest
 from fastapi import status
@@ -37,3 +38,9 @@ def test_post_svg_url(imx_version, request_data, expected_status_code, icon_url,
     assert response.status_code == expected_status_code
     if expected_status_code == 200:
         assert response.text == icon_url
+
+    query_params = urlencode({'icon_type': 'qgis'})
+    response = fast_api_icon_url_client.post(f"/{imx_version}/svg/url/?{query_params}", json=request_data)
+    assert response.status_code == expected_status_code
+    if expected_status_code == 200:
+        assert response.text == icon_url.replace(".svg", "-qgis.svg")

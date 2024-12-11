@@ -93,7 +93,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-    "imxIcons<0.1.0",
+    "imxIcons",
     "fastapi",
     "jinja2",
     "gunicorn",

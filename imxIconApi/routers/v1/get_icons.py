@@ -2,6 +2,7 @@ import re
 
 from fastapi import APIRouter, HTTPException, Query, Response, status
 from imxIcons.domain.icon_library import ICON_DICT
+from imxIcons.domain.supportedIconTypes import IconTypesEnum
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
 from imxIcons.iconService import IconService
 from imxIcons.iconServiceModels import IconModel, IconRequestModel
@@ -91,9 +92,11 @@ async def get_icon_mapping(
     },
 )
 async def get_svg_icon_as_string(
-    item: IconRequestModel, imx_version: ImxVersionEnum, qgis_supported: bool = False
+    item: IconRequestModel,
+    imx_version: ImxVersionEnum,
+    icon_type: IconTypesEnum = IconTypesEnum.svg,
 ):
-    svg_content = IconService.get_svg(item, imx_version)
+    svg_content = IconService.get_svg(item, imx_version, icon_type=icon_type)
     return Response(content=svg_content, media_type="image/svg+xml")
 
 
@@ -122,9 +125,11 @@ async def get_svg_icon_as_string(
     },
 )
 async def get_svg_icon_as_file(
-    item: IconRequestModel, imx_version: ImxVersionEnum, qgis_supported: bool = False
+    item: IconRequestModel,
+    imx_version: ImxVersionEnum,
+    icon_type: IconTypesEnum = IconTypesEnum.svg,
 ):
-    svg_content = IconService.get_svg(item, imx_version)
+    svg_content = IconService.get_svg(item, imx_version, icon_type=icon_type)
     match = re.search(r'<svg[^>]*\bname="([^"]*)"', svg_content)
 
     if match:

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from imxIcons.domain.supportedIconTypes import IconTypesEnum
 from imxIcons.iconService import ICON_DICT, IconService, ImxVersionEnum
 from imxIcons.iconServiceModels import IconRequestModel
 
@@ -26,4 +27,14 @@ async def create_asset_folder(base_dir: Path = Path(__file__).parent):
                     ImxVersionEnum[version],
                 )
                 file_path = icon_folder_base / f"{icon.icon_name}.svg"
+                file_path.write_text(svg_content, encoding="utf-8")
+
+                svg_content = IconService.get_svg(
+                    IconRequestModel(
+                        imx_path=icon.imx_path, properties=icon.properties
+                    ),
+                    ImxVersionEnum[version],
+                    icon_type=IconTypesEnum.qgis,
+                )
+                file_path = icon_folder_base / f"{icon.icon_name}-qgis.svg"
                 file_path.write_text(svg_content, encoding="utf-8")

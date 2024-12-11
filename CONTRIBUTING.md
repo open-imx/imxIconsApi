@@ -62,11 +62,11 @@ hatch version patch
 ```
 
 ```bash
-hatch run version minor
+hatch version minor
 ```
 
 ```bash
-hatch run version major
+hatch version major
 ```
 
 
