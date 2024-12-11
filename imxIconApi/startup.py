@@ -1,8 +1,8 @@
 from pathlib import Path
 
+from imxIcons.domain.supportedIconTypes import IconTypesEnum
 from imxIcons.iconService import ICON_DICT, IconService, ImxVersionEnum
 from imxIcons.iconServiceModels import IconRequestModel
-from imxIcons.domain.supportedIconTypes import IconTypesEnum
 
 
 async def create_asset_folder(base_dir: Path = Path(__file__).parent):
@@ -34,7 +34,7 @@ async def create_asset_folder(base_dir: Path = Path(__file__).parent):
                         imx_path=icon.imx_path, properties=icon.properties
                     ),
                     ImxVersionEnum[version],
-                    icon_type=IconTypesEnum.qgis
+                    icon_type=IconTypesEnum.qgis,
                 )
                 file_path = icon_folder_base / f"{icon.icon_name}-qgis.svg"
                 file_path.write_text(svg_content, encoding="utf-8")

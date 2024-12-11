@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlencode
 
 import pytest
 from fastapi import status
@@ -30,12 +31,13 @@ def test_endpoint_details(openapi_spec):
         assert _data_[0]["schema"]["anyOf"] == [{'type': 'string'}, {'type': 'null'}]
 
     def test_qgs_parameter(_data):
-        _data_ = [_ for _ in _data if _["name"] == "qgis_supported"]
+        _data_ = [_ for _ in _data if _["name"] == "icon_type"]
         assert len(_data_) == 1
-        assert _data_[0]["name"] == "qgis_supported"
+        assert _data_[0]["name"] == "icon_type"
         assert _data_[0]["in"] == "query"
         assert _data_[0]["required"] == False
-        assert _data_[0]["schema"] == {'default': False, 'title': 'Qgis Supported', 'type': 'boolean'}
+        assert _data_[0]["schema"] == {'$ref': '#/components/schemas/IconTypesEnum', 'default': 'svg'}
+
 
     def test_icon_request_body(_data):
         assert 'requestBody' in _data.keys()
@@ -131,6 +133,13 @@ def test_get_svg_icon_as_string(imx_version, request_data, expected_status_code,
         assert response.headers["Content-Type"] == "image/svg+xml"
         assert response.text.startswith("<svg")
 
+    query_params = urlencode({'icon_type': 'qgis'})
+    response = fast_api_icon_client.post(f"/{imx_version}/svg/str?{query_params}", json=request_data)
+    assert response.status_code == expected_status_code
+    if expected_status_code == 200:
+        assert response.headers["Content-Type"] == "image/svg+xml"
+        assert response.text.startswith("<svg")
+        assert 'param(' in response.text
 
 
 @pytest.mark.parametrize(

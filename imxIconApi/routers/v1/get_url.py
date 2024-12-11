@@ -3,22 +3,16 @@ from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request, Response, status
 from fastapi.responses import FileResponse
+from imxIcons.domain.supportedIconTypes import IconTypesEnum
 from imxIcons.domain.supportedImxVersions import ImxVersionEnum
 from imxIcons.iconService import IconService
 from imxIcons.iconServiceModels import IconRequestModel
-from imxIcons.domain.supportedIconTypes import IconTypesEnum
 
 from imxIconApi.exceptions import ErrorCode, ErrorModel
 
 router = APIRouter(tags=["icons"])
 
 IMX_VERSIONS = [version.value for version in ImxVersionEnum]
-
-
-def get_icon_asset_suffix(icon_type:IconTypesEnum):
-    if icon_type == IconTypesEnum.qgis:
-        return "-qgis"
-    return ""
 
 
 @router.post(
@@ -49,7 +43,7 @@ async def get_icon_url(
     item: IconRequestModel,
     imx_version: ImxVersionEnum,
     request: Request,
-    icon_type: IconTypesEnum = IconTypesEnum.svg
+    icon_type: IconTypesEnum = IconTypesEnum.svg,
 ):
     # we do not check the asset folder, sometimes we do not have the assets
     svg_content = IconService.get_svg(item, imx_version, icon_type=icon_type)
@@ -63,7 +57,10 @@ async def get_icon_url(
             detail="SVG name attribute not found",
         )
 
-    suffix = get_icon_asset_suffix(icon_type)
+    suffix = ""
+    if icon_type == IconTypesEnum.qgis:
+        suffix = "-qgis"
+
     return f"{request.base_url}{imx_version.value}/svg/{svg_name}{suffix}.svg"
 
 
@@ -102,7 +99,6 @@ async def get_icon_url(
 async def get_svg_url(
     imx_version: ImxVersionEnum,
     icon_name: str,
-    icon_type: IconTypesEnum = IconTypesEnum.svg
 ):
     if not imx_version:
         raise HTTPException(  # pragma: no cover
@@ -110,8 +106,7 @@ async def get_svg_url(
         )
 
     static_base_path = Path(__file__).parent.parent.parent / "static" / imx_version.name
-    suffix = get_icon_asset_suffix(icon_type)
-    svg_file_path = static_base_path / f"{icon_name}{suffix}.svg"
+    svg_file_path = static_base_path / f"{icon_name}.svg"
 
     if not svg_file_path.exists():
         raise HTTPException(
