@@ -86,7 +86,10 @@ def validate_feedback(feedback: Feedback) -> bool:
         return False
 
     # Reject feedback that contains URLs in any of the fields
-    if any(re.search(r"http[s]?://", str(value)) for value in [feedback.icon_name, feedback.feedback_text]):
+    if any(
+        re.search(r"http[s]?://", str(value))
+        for value in [feedback.icon_name, feedback.feedback_text]
+    ):
         return False
 
     return True
@@ -107,7 +110,7 @@ async def submit_feedback(request: Request, feedback: Feedback):
             )
 
         await send_to_discord(feedback)
-        return {"message": "Feedback submitted successfully"}
+        return {"message": "Feedback submitted successfully"}  # NOQA TRY300
     except httpx.HTTPStatusError as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
