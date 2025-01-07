@@ -13,7 +13,7 @@ markers = [
 ]
 
 [tool.isort]
-profile = "black"  # Adjust this to match your style preference
+profile = "black"
 
 [tool.hatch]
 
@@ -41,10 +41,11 @@ dependencies = [
     "distlib",
     "httpx",
     "bumpversion",
+    "zizmor",
 ]
 
 [[tool.hatch.envs.test.matrix]]
-python = ["3.10", "3.11", "3.12"]
+python = ["3.12"]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest"
@@ -60,7 +61,7 @@ lint-check = [
   "ruff format --check imxIconApi/",
   "ruff check imxIconApi/",
   "mypy imxIconApi/ --check-untyped-defs",
-
+  "zizmor .github/workflows/",
 ]
 docs-serve = "mkdocs serve"
 docs-build = "mkdocs build"
@@ -95,6 +96,7 @@ requires-python = ">=3.10"
 dependencies = [
     "imxIcons",
     "fastapi",
+    "slowapi",
     "jinja2",
     "gunicorn",
     "uvicorn",
@@ -102,5 +104,4 @@ dependencies = [
 
 
 [project.urls]
-
 Source = "https://github.com/open-imx/ImxIconsApi"

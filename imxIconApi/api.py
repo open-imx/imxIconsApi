@@ -12,7 +12,7 @@ from imxIconApi.api_description import description
 
 # from imxIconApi.rateLimiter import RateLimiterMiddleware
 from imxIconApi.routers import icon_lib_page
-from imxIconApi.routers.v1 import get_icons, get_url
+from imxIconApi.routers.v1 import get_icons, get_url, feedback
 from imxIconApi.startup import create_asset_folder
 
 # https://github.com/Intility/fastapi-azure-auth
@@ -43,6 +43,7 @@ app.add_middleware(
 app.include_router(icon_lib_page.router)
 app.include_router(get_icons.router)
 app.include_router(get_url.router)
+app.include_router(feedback.router)
 
 templates = Jinja2Templates(directory="imxIconApi/templates")
 
