@@ -12,7 +12,7 @@ from imxIconApi.api_description import description
 
 # from imxIconApi.rateLimiter import RateLimiterMiddleware
 from imxIconApi.routers import icon_lib_page
-from imxIconApi.routers.v1 import get_icons, get_url, feedback
+from imxIconApi.routers.v1 import feedback, get_icons, get_url
 from imxIconApi.startup import create_asset_folder
 
 # https://github.com/Intility/fastapi-azure-auth
