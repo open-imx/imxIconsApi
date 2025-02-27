@@ -45,6 +45,7 @@ jobs:
           name: python-app
           path: |
             release.zip
+            !venv/
 
   release:
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true || github.event_name == 'repository_dispatch' && github.event.action == 'release_published'
@@ -154,9 +155,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3A59CF625ABC4DFB9943CE33D4683B9D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F7DFF8BF86F848958B48F8D92582AD44 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_875638BD64B947BBBA739ED7A494902C }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B93E56FF6F9A4439AD1CECC1E0A61555 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13917EA41027436D82B5E6B18A5F1CCC }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D9B84D3220B7430A9046FF8FD3B1A4A2 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
