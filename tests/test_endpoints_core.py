@@ -133,13 +133,18 @@ def test_get_svg_icon_as_string(imx_version, request_data, expected_status_code,
         assert response.headers["Content-Type"] == "image/svg+xml"
         assert response.text.startswith("<svg")
 
-    query_params = urlencode({'icon_type': 'qgis'})
-    response = fast_api_icon_client.post(f"/{imx_version}/svg/str?{query_params}", json=request_data)
-    assert response.status_code == expected_status_code
-    if expected_status_code == 200:
-        assert response.headers["Content-Type"] == "image/svg+xml"
-        assert response.text.startswith("<svg")
-        assert 'param(' in response.text
+    for query_params in [
+        {'icon_type': 'qgis_dark'},
+        {'icon_type': 'qgis_dark'},
+        {'icon_type': 'svg_dark'}
+    ]:
+        response = fast_api_icon_client.post(f"/{imx_version}/svg/str?{urlencode(query_params)}", json=request_data)
+        assert response.status_code == expected_status_code
+        if expected_status_code == 200:
+            assert response.headers["Content-Type"] == "image/svg+xml"
+            assert response.text.startswith("<svg")
+            if 'qgis' in query_params['icon_type']:
+                assert 'param(' in response.text
 
 
 @pytest.mark.parametrize(
