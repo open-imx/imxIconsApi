@@ -3,7 +3,6 @@ import pytest
 from fastapi.testclient import TestClient
 from fastapi import FastAPI
 
-from imxIconApi.rateLimiter import RateLimiterMiddleware
 from imxIconApi.routers.v1 import get_icons, get_url
 from imxIconApi.api import app
 from imxIconApi.routers import icon_lib_page
@@ -12,8 +11,6 @@ from imxIconApi.routers import icon_lib_page
 @pytest.fixture(scope="module")
 def fast_api_limiter_client():
     app = FastAPI()
-
-    app.add_middleware(RateLimiterMiddleware)
 
     @app.get("/test")
     async def test_endpoint():
