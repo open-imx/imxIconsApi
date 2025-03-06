@@ -44,6 +44,8 @@ dependencies = [
     "dotenv",
     "slowapi",
     "zizmor",
+    "requests",
+    "types-requests",
 ]
 
 [[tool.hatch.envs.test.matrix]]
@@ -101,7 +103,7 @@ dependencies = [
     "jinja2",
     "gunicorn",
     "uvicorn",
-    "httpx",
+    "requests",
 ]
 
 
