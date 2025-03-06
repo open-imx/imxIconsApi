@@ -40,7 +40,7 @@ app.add_middleware(
 app.include_router(icon_lib_page.router)
 app.include_router(get_icons.router)
 app.include_router(get_url.router)
-app.include_router(feedback.router)
+# app.include_router(feedback.router)
 
 templates = Jinja2Templates(directory="imxIconApi/templates")
 
