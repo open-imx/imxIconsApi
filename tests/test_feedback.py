@@ -27,26 +27,26 @@ def test_valid_feedback(valid_feedback, mock_icon_service):
 
 
 def test_default_feedback(valid_feedback, mock_icon_service):
-    invalid_feedback = valid_feedback.copy(update={"feedback_text": "string"})
+    invalid_feedback = valid_feedback.model_copy(update={"feedback_text": "string"})
     assert validate_feedback(invalid_feedback) is False
 
 
 def test_invalid_icon_name_feedback(valid_feedback, mock_icon_service):
-    invalid_feedback = valid_feedback.copy(update={"icon_name": "InvalidIcon"})
+    invalid_feedback = valid_feedback.model_copy(update={"icon_name": "InvalidIcon"})
     assert validate_feedback(invalid_feedback) is False
 
 
 def test_invalid_imx_version_feedback(valid_feedback, mock_icon_service):
-    invalid_feedback = valid_feedback.copy(update={"imx_version": "v0"})
+    invalid_feedback = valid_feedback.model_copy(update={"imx_version": "v0"})
     assert validate_feedback(invalid_feedback) is False
 
 
 def test_invalid_origin_feedback(valid_feedback, mock_icon_service):
-    invalid_feedback = valid_feedback.copy(update={"icon_url": "https://xxxx-imx.github.io/imxIcons/generated/SignalLow.svg"})
+    invalid_feedback = valid_feedback.model_copy(update={"icon_url": "https://xxxx-imx.github.io/imxIcons/generated/SignalLow.svg"})
     assert validate_feedback(invalid_feedback) is False
 
 
 def test_url_feedback(valid_feedback, mock_icon_service):
-    invalid_feedback = valid_feedback.copy(update={"feedback_text": "http:// Great icon!"})
+    invalid_feedback = valid_feedback.model_copy(update={"feedback_text": "http:// Great icon!"})
     assert validate_feedback(invalid_feedback) is False
 
