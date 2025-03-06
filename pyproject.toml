@@ -46,6 +46,7 @@ dependencies = [
     "zizmor",
     "requests",
     "types-requests",
+    "python-dotenv",
 ]
 
 [[tool.hatch.envs.test.matrix]]
@@ -104,6 +105,7 @@ dependencies = [
     "gunicorn",
     "uvicorn",
     "requests",
+    "python-dotenv",
 ]
 
 
