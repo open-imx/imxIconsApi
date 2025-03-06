@@ -35,35 +35,19 @@ jobs:
       - name: Run tests using Hatch
         uses: ./.github/run-tests/
 
-      - name: Bump version
-        run: |
-          hatch version dev
-          git add .
-          git commit -m "Bump version"
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get version
-        id: get_version
-        run: |
-          version=$(python -c 'import re; exec(open("imxIconApi/__init__.py").read()); print(__version__)')
-          echo "VERSION=$version" >> $GITHUB_ENV
-
       - name: Create requirements file for Azure web app
         run: |
           python create_requirements_file.py
 
       - name: Zip artifact for deployment
-        run: zip imx-icons-api-${{ env.VERSION }}.zip ./* -r
+        run: zip imx-icons-api-${{ github.run_number }}.zip ./* -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
         with:
           name: python-app
           path: |
-            imx-icons-api-${{ env.VERSION }}.zip
-            !venv/
+            imx-icons-api-${{ github.run_number }}.zip
 
   release:
     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true || github.event_name == 'repository_dispatch' && github.event.action == 'release_published'
@@ -89,6 +73,36 @@ jobs:
           python -m pip install --upgrade pip
           pip install hatch
           pip install configparser
+
+      - name: Setup GIT
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout -b version-bump-${{ github.sha }}
+
+      - name: Bump version
+        run: |
+          hatch version dev
+
+      - name: Push changes
+        run: |
+          git add .
+          git status
+          git push origin version-bump-${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge Pull Request
+        run: |
+          gh pr merge --repo ${{ github.repository }} ${{ github.event.pull_request.number }} --merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete Branch
+        run: |
+          git push origin --delete version-bump-${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get version
         id: get_version
@@ -119,7 +133,7 @@ jobs:
           name: python-app
 
       - name: Unzip artifact for deployment
-        run: unzip imx-icons-api-${{ env.VERSION }}.zip
+        run: unzip imx-icons-api-${{ github.run_number }}.zip
 
       - name: Login to Azure
         uses: azure/login@v2
