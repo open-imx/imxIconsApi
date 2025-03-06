@@ -58,8 +58,12 @@ async def get_icon_url(
         )
 
     suffix = ""
-    if icon_type == IconTypesEnum.qgis:
+    if icon_type == IconTypesEnum.svg_dark:
+        suffix = "-dark"
+    elif icon_type == IconTypesEnum.qgis:
         suffix = "-qgis"
+    elif icon_type == IconTypesEnum.qgis_dark:
+        suffix = "-qgis-dark"
 
     return f"{request.base_url}{imx_version.value}/svg/{svg_name}{suffix}.svg"
 
