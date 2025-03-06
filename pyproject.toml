@@ -41,6 +41,9 @@ dependencies = [
     "distlib",
     "httpx",
     "bumpversion",
+    "dotenv",
+    "slowapi",
+    "zizmor",
 ]
 
 [[tool.hatch.envs.test.matrix]]
@@ -60,7 +63,7 @@ lint-check = [
   "ruff format --check imxIconApi/",
   "ruff check imxIconApi/",
   "mypy imxIconApi/ --check-untyped-defs",
-
+  "zizmor .github/workflows/",
 ]
 docs-serve = "mkdocs serve"
 docs-build = "mkdocs build"

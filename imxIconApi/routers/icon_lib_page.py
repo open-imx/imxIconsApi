@@ -32,7 +32,8 @@ async def render_icons(request: Request, imx_version: ImxVersionEnum):
             for icon_entity in icon_entities[imx_version.name]:
                 svg_content = await get_svg_content(
                     IconRequestModel(
-                        imx_path=imx_path, properties=icon_entity.properties
+                        imx_path=imx_path,
+                        properties=icon_entity.properties,  # type: ignore
                     ),
                     imx_version,
                 )
