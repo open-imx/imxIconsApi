@@ -47,6 +47,7 @@ dependencies = [
     "requests",
     "types-requests",
     "python-dotenv",
+    "slowapi",
 ]
 
 [[tool.hatch.envs.test.matrix]]
@@ -106,6 +107,7 @@ dependencies = [
     "uvicorn",
     "requests",
     "python-dotenv",
+    "slowapi",
 ]
 
 
