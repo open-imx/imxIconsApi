@@ -1,0 +1,41 @@
+name: Cleanup Old Workflow Runs
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Runs every 10 minutes
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Delete old workflow runs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the current date in seconds since epoch
+          current_time=$(date +%s)
+          # Set the age limit to 7 days (in seconds)
+          age_limit=$((7 * 24 * 60 * 60))
+
+          # Fetch all workflow runs
+          runs=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs")
+
+          # Loop through each run and delete if older than 7 days
+          echo "$runs" | jq -c '.workflow_runs[]' | while read -r run; do
+            run_id=$(echo "$run" | jq -r '.id')
+            run_created_at=$(echo "$run" | jq -r '.created_at')
+            run_created_time=$(date -d "$run_created_at" +%s)
+
+            # Calculate the age of the run
+            run_age=$((current_time - run_created_time))
+
+            if [ "$run_age" -gt "$age_limit" ]; then
+              echo "Deleting run ID: $run_id, created at: $run_created_at"
+              curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" \
+                "https://api.github.com/repos/${{ github.repository }}/actions/runs/$run_id"
+            fi
+          done
