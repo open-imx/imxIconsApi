@@ -78,7 +78,7 @@ def validate_feedback(feedback: Feedback) -> bool:
         return False
 
     # check if icon url has valid root
-    if "https://open-imx.github.io/imxIcons/generated/" not in feedback.icon_url:
+    if "generated/" not in feedback.icon_url:
         return False
 
     # Reject feedback that contains URLs in any of the fields
