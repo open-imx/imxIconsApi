@@ -41,7 +41,7 @@ def test_invalid_imx_version_feedback(valid_feedback, mock_icon_service):
 
 
 def test_invalid_origin_feedback(valid_feedback, mock_icon_service):
-    invalid_feedback = valid_feedback.model_copy(update={"icon_url": "https://xxxx-imx.github.io/imxIcons/generated/SignalLow.svg"})
+    invalid_feedback = valid_feedback.model_copy(update={"icon_url": "xxxx/SignalLow.svg"})
     assert validate_feedback(invalid_feedback) is False
 
 
